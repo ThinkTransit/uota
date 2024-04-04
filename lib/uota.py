@@ -7,8 +7,8 @@ MIT license; Copyright (c) 2021 Martin Komon
 import gc
 import uos
 import urequests
-import uzlib
-import utarfile as tarfile
+import deflate
+import tarfile
 from micropython import const
 
 try:
@@ -35,8 +35,6 @@ except ImportError:
     log.warning('ucertpin package not found, certificate pinning is disabled')
     ucertpin_available = False
 
-
-GZDICT_SZ = const(31)
 ota_config = {}
 
 def load_ota_cfg():
@@ -169,7 +167,7 @@ def install_new_firmware(quiet=False):
         return
 
     with open(ota_config['tmp_filename'], 'rb') as f1:
-        f2 = uzlib.DecompIO(f1, GZDICT_SZ)
+        f2 = deflate.DeflateIO(f1, deflate.GZIP)
         f3 = tarfile.TarFile(fileobj=f2)
         for _file in f3:
             file_name = _file.name
@@ -203,4 +201,3 @@ def install_new_firmware(quiet=False):
     if load_ota_cfg():
         for filename in ota_config['delete']:
             recursive_delete(filename)
-
