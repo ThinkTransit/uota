@@ -101,7 +101,11 @@ def check_for_updates(version_check=True, quiet=False, pubkey_hash=b'') -> bool:
     if not ota_config['url'].endswith('/'):
         ota_config['url'] = ota_config['url'] + '/'
 
-    response = urequests.get(ota_config['url'] + 'latest')
+    auth = None
+    if 'user' in ota_config and 'pass' in ota_config:
+        auth = (ota_config['user'], ota_config['pass'])
+
+    response = urequests.get(ota_config['url'] + 'latest', auth=auth)
 
     if ucertpin_available and pubkey_hash:
         server_pubkey_hash = get_pubkey_hash_from_der(response.raw.getpeercert(True))
@@ -134,7 +138,7 @@ def check_for_updates(version_check=True, quiet=False, pubkey_hash=b'') -> bool:
             import ubinascii
             hash_obj = uhashlib.sha256()
 
-        response = urequests.get(ota_config['url'] + remote_filename)
+        response = urequests.get(ota_config['url'] + remote_filename, auth=auth)
         with open(ota_config['tmp_filename'], 'wb') as f:
             while True:
                 chunk = response.raw.read(512)
