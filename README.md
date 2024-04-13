@@ -59,7 +59,7 @@ Drop the following files into the root of your project:
       - `delete`
         - items are file/directory names as strings, these will be deleted after new firmware is installed
         - this configuration option is loaded after the new firmware is installed to perform any cleanup that may be needed
-      - 'user' and 'pass' (optional)
+      - 'user' and 'password' (optional)
         - Support for basic http authentication
 1. `version`
     - the current version of the firmware

@@ -10,3 +10,13 @@ Run `docker compose up -d` to start nginx in Docker and point your `uota.cfg` at
 ## Certificate for testing of cert. pinning
 
 Not implemented yet.
+
+## Snippets for quick testing
+
+```python
+import urequests
+auth = None
+auth = ('test_user', 't3st_pa$$')
+url='http://192.168.1.20:8080/'
+response = urequests.get(url + 'latest', auth=auth)
+```
