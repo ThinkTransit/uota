@@ -1,6 +1,6 @@
 {
   "urls": [
-    ["uota.py", "github:mkomon/uota/lib/uota.py"]
+    ["uota.py", "github:ThinkTransit/uota/lib/uota.py"]
   ],
   "deps": [
     ["tarfile", "latest"]
