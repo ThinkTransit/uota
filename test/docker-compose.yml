@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:mainline-bookworm
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+      - ./htpasswd:/etc/nginx/htpasswd:ro
+      - ./data:/data:ro
+    environment:
+      UOTA_USER: "test_user"
+      UOTA_PASS: "t3st_pa$$"
+    ports:
+      - 8080:80
