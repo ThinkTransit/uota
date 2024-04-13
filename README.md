@@ -6,7 +6,7 @@ Update your device firmware written in MicroPython over the air. Suitable for pr
 
 Compatibility:
 
-- v0.1 requires MicroPython 1.17 or newer
+- v0.1 requires MicroPython 1.17 - 1.20
 - v0.2 requires MicroPython 1.21 or newer
 
 ## How it's different from other OTA Updaters
