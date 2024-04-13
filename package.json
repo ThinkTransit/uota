@@ -3,7 +3,7 @@
     ["uota.py", "github:mkomon/uota/lib/uota.py"]
   ],
   "deps": [
-    ["utarfile", "latest"]
+    ["tarfile", "latest"]
   ],
-  "version": "0.1"
+  "version": "0.2"
 }
