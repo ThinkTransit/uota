@@ -178,35 +178,34 @@ def install_new_firmware(quiet=False):
         return
 
     with open(ota_config['tmp_filename'], 'rb') as f1:
-        f2 = deflate.DeflateIO(f1, deflate.GZIP)
-        f3 = tarfile.TarFile(fileobj=f2)
-        for _file in f3:
-            file_name = _file.name
-            if file_name in ota_config['excluded_files']:
-                item_type = 'directory' if file_name.endswith('/') else 'file'
-                not quiet and log.info(f'Skipping excluded {item_type} {file_name}')
-                continue
-
-            if file_name.endswith('/'):  # is a directory
-                try:
-                    not quiet and log.debug(f'creating directory {file_name} ... ')
-                    uos.mkdir(file_name[:-1])  # without trailing slash or fail with errno 2
-                    not quiet and log.debug('ok')
-                except OSError as e:
-                    if e.errno == 17:
-                        not quiet and log.debug('already exists')
-                    else:
-                        raise e
-                continue
-            file_obj = f3.extractfile(_file)
-            with open(file_name, 'wb') as f_out:
-                written_bytes = 0
-                while True:
-                    buf = file_obj.read(512)
-                    if not buf:
-                        break
-                    written_bytes += f_out.write(buf)
-                not quiet and log.info(f'file {file_name} ({written_bytes} B) written to flash')
+        with deflate.DeflateIO(f1, deflate.GZIP) as f2:
+            f3 = tarfile.TarFile(fileobj=f2)
+            for _file in f3:
+                file_name = _file.name
+                if file_name in ota_config['excluded_files']:
+                    item_type = 'directory' if file_name.endswith('/') else 'file'
+                    not quiet and log.info(f'Skipping excluded {item_type} {file_name}')
+                    continue
+                if file_name.endswith('/'):  # is a directory
+                    try:
+                        not quiet and log.debug(f'creating directory {file_name} ... ')
+                        uos.mkdir(file_name[:-1])  # without trailing slash or fail with errno 2
+                        not quiet and log.debug('ok')
+                    except OSError as e:
+                        if e.errno == 17:
+                            not quiet and log.debug('already exists')
+                        else:
+                            raise e
+                    continue
+                file_obj = f3.extractfile(_file)
+                with open(file_name, 'wb') as f_out:
+                    written_bytes = 0
+                    while True:
+                        buf = file_obj.read(512)
+                        if not buf:
+                            break
+                        written_bytes += f_out.write(buf)
+                    not quiet and log.info(f'file {file_name} ({written_bytes} B) written to flash')
 
     uos.remove(ota_config['tmp_filename'])
     if load_ota_cfg():
